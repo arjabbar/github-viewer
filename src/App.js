@@ -1,24 +1,33 @@
 import React, { Component } from 'react';
-import "whatwg-fetch";
 import './App.css';
 import logo from './logo.gif';
+import axios from 'axios'
+
 
 class App extends Component {
   constructor(props) {
     super(props);
     this.state = {
       users: [],
-      loading: true
+      loading: true,
+      keyword: 'aj',
     }
   }
   
   componentDidMount() {
-    fetch('https://api.github.com/search/users?q=aj')
-      .then(response => response.json())
-      .then(results => this.setState({
-        users: results.items,
-        loading: false
-      }));
+   this.loadUsers();
+  }
+
+  loadUsers = () => {
+    axios.get('https://api.github.com/search/users?q=' + this.state.keyword).then(res => {
+      this.setState({users: res.data.items, loading: false});
+     
+    })
+  }
+
+  changeUserInput = e => {
+    console.log(e.target.value);
+    this.setState({keyword: e.target.value});
   }
 
   render() {
@@ -43,11 +52,11 @@ class App extends Component {
                 <h1 className="App-title">Github Viewer</h1>
               </div>
               <div>
-                <input type="text" placeholder="Search for anything on Github"/>
+                <input onChange={this.changeUserInput.bind(this)} value={this.state.keyword} type="text" placeholder="Search for anything on Github"/>
                 <div>
                   <div>
                     <span>Search by</span> 
-                    <button>User</button>
+                    <button onClick={this.loadUsers}>User</button>
                     <button>Repo</button>
                   </div>
                 </div>
