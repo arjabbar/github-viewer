@@ -1,7 +1,7 @@
 import React, { Component } from 'react';
-import logo from './logo.gif';
-import './App.css';
 import "whatwg-fetch";
+import './App.css';
+import logo from './logo.gif';
 
 class App extends Component {
   constructor(props) {
@@ -24,7 +24,7 @@ class App extends Component {
   render() {
     let userList = null;
     if (this.state.loading) {
-      userList = <div>Loading...</div>
+      userList = <div>Loading</div>;
     } else {
       userList = this.state.users.map(user => {
         return (
@@ -36,19 +36,19 @@ class App extends Component {
     return (
       <div className="App">
         <div className="">
-          <header className="callout App-intro">
-            <div className="grid-x align-middle">
-              <div className="small-2 cell">
+          <header className="App-intro">
+            <div>
+              <div>
                 <img src={logo} className="App-logo" alt="logo" />
                 <h1 className="App-title">Github Viewer</h1>
               </div>
-              <div className="small-4 small-offset-2 cell grid-y">
-                <input className="small-4 cell" type="text" placeholder="Search for anything on Github"/>
-                <div className="small-4 cell">
-                  <div className="buttonGroup grid-x align-middle align-center">
-                    <span className="small-2">Search by</span> 
-                    <button className="button small-3">User</button>
-                    <button className="button small-3">Repo</button>
+              <div>
+                <input type="text" placeholder="Search for anything on Github"/>
+                <div>
+                  <div>
+                    <span>Search by</span> 
+                    <button>User</button>
+                    <button>Repo</button>
                   </div>
                 </div>
               </div>
