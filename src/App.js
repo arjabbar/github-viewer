@@ -1,7 +1,7 @@
+import { AppBar, Button, Grid, Input, Toolbar, Typography } from "@material-ui/core";
 import React, { Component } from 'react';
 import "whatwg-fetch";
 import './App.css';
-import logo from './logo.gif';
 
 class App extends Component {
   constructor(props) {
@@ -24,7 +24,7 @@ class App extends Component {
   render() {
     let userList = null;
     if (this.state.loading) {
-      userList = <div>Loading</div>;
+      userList = (<div>Loading</div>);
     } else {
       userList = this.state.users.map(user => {
         return (
@@ -35,28 +35,23 @@ class App extends Component {
 
     return (
       <div className="App">
-        <div className="">
-          <header className="App-intro">
-            <div>
-              <div>
-                <img src={logo} className="App-logo" alt="logo" />
-                <h1 className="App-title">Github Viewer</h1>
-              </div>
-              <div>
-                <input type="text" placeholder="Search for anything on Github"/>
-                <div>
-                  <div>
-                    <span>Search by</span> 
-                    <button>User</button>
-                    <button>Repo</button>
-                  </div>
-                </div>
-              </div>
-            </div>
-          </header>
-          <div className="user-list">
-            {userList}
-          </div>
+        <AppBar className="App-intro flex" position="static" title="Github Viewer" color="default">
+          <Toolbar>
+            <Grid container>
+              <Grid item xs={2}>
+                <Typography variant="title" color="inherit">
+                  Github Viewer
+                </Typography>
+              </Grid>
+              <Grid item xs={8}>
+                <Input type="text" placeholder="Search for users" style={{width: 250}}/>
+                <Button>Search</Button>
+              </Grid>
+            </Grid>
+          </Toolbar>
+        </AppBar>
+        <div className="user-list">
+          {userList}
         </div>
       </div>
     );
