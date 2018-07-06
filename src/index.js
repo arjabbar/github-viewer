@@ -3,6 +3,10 @@ import ReactDOM from 'react-dom';
 import './index.css';
 import App from './App';
 import registerServiceWorker from './registerServiceWorker';
+import * as $ from "jquery";
+import "foundation-sites";
+import 'foundation-sites/dist/css/foundation.min.css';
 
 ReactDOM.render(<App />, document.getElementById('root'));
 registerServiceWorker();
+$(document).foundation();
