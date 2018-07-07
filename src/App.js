@@ -2,37 +2,42 @@ import { AppBar, Button, Grid, Input, Toolbar, Typography } from "@material-ui/c
 import React, { Component } from 'react';
 import "whatwg-fetch";
 import './App.css';
+import UserList from './UserList';
+
+let rootContainerStyles = {
+  maxWidth: 960, 
+  backgroundColor: 'white', 
+  boxShadow: '2px 12px 15px darkgrey', 
+  margin: 'auto', 
+  minHeight: '100%',
+  overflowY: 'scroll',
+  justifyContent: 'center'
+};
 
 class App extends Component {
+
   constructor(props) {
     super(props);
+    this.handleSearchClicked = this.handleSearchClicked.bind(this);
+    this.handleSearchChanged = this.handleSearchChanged.bind(this);
     this.state = {
-      users: [],
-      loading: true
+      users: null,
+      searchQuery: null
     }
   }
-  
-  componentDidMount() {
-    fetch('https://api.github.com/search/users?q=aj')
-      .then(response => response.json())
-      .then(results => this.setState({
-        users: results.items,
-        loading: false
-      }));
+
+  handleSearchClicked(event) {
+    fetch(`https://api.github.com/search/users?q=${this.state.searchQuery}`)
+  }
+
+  handleSearchChanged(event) {
+    console.debug(`Updating the query to ${event.target.value}`);
+    this.setState({
+      searchQuery: event.target.value
+    });
   }
 
   render() {
-    let userList = null;
-    if (this.state.loading) {
-      userList = (<div>Loading</div>);
-    } else {
-      userList = this.state.users.map(user => {
-        return (
-          <div>{user.login}</div>
-        )
-      });
-    }
-
     return (
       <div className="App">
         <AppBar className="App-intro flex" position="static" title="Github Viewer" color="default">
@@ -44,15 +49,15 @@ class App extends Component {
                 </Typography>
               </Grid>
               <Grid item xs={8}>
-                <Input type="text" placeholder="Search for users" style={{width: 250}}/>
-                <Button>Search</Button>
+                <Input type="text" placeholder="Search for users" style={{width: 250}} onChange={this.handleSearchChanged}/>
+                <Button color="primary" onClick={this.handleSearchClicked}>Search</Button>
               </Grid>
             </Grid>
           </Toolbar>
         </AppBar>
-        <div className="user-list">
-          {userList}
-        </div>
+        <Grid container style={rootContainerStyles} className="user-list" alignItems="center">
+          {this.state.queryToExecute && <UserList query={this.state.queryToExecute}/>}
+        </Grid>
       </div>
     );
   }
