@@ -20,3 +20,33 @@ html, body, #root, .App {
   font-size: large;
 }
 
+.search-metadata {
+  background-color: #DDDDDD;
+  align-self: flex-start;
+}
+
+.user-list {
+  max-width: 960px;
+  background-color: 'white'; 
+  box-shadow: '2px 12px 15px darkgrey'; 
+  margin: 'auto'; 
+  min-height: '100%';
+  overflow-y: 'scroll';
+  justify-content: 'flex-start';
+}
+
+.user-list-container {
+  flex-grow: 1;
+  width: 100%;
+}
+
+.loading-container {
+  max-width: 960px;
+  background-color: white; 
+  box-shadow: 2px 12px 15px darkgrey; 
+  margin: auto; 
+  min-height: 100%;
+  overflow-y: scroll;
+  justify-content: center;
+  flex-direction: column;
+}

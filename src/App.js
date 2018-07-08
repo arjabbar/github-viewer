@@ -1,43 +1,80 @@
 import { AppBar, Button, Grid, Input, Toolbar, Typography } from "@material-ui/core";
+import * as parseLinkHeader from 'parse-link-header';
 import React, { Component } from 'react';
 import "whatwg-fetch";
 import './App.css';
 import UserList from './UserList';
-
-let rootContainerStyles = {
-  maxWidth: 960, 
-  backgroundColor: 'white', 
-  boxShadow: '2px 12px 15px darkgrey', 
-  margin: 'auto', 
-  minHeight: '100%',
-  overflowY: 'scroll',
-  justifyContent: 'center'
-};
+import SearchMetadataBar from './SearchMetadataBar';
+import LoadingContainer from './LoadingContainer';
+import { PropTypes } from 'prop-types';
 
 class App extends Component {
+
+  state = {
+    users: [],
+    searchQuery: null,
+    loading: false,
+    executedQuery: null,
+    searchError: false
+  }
 
   constructor(props) {
     super(props);
     this.handleSearchClicked = this.handleSearchClicked.bind(this);
     this.handleSearchChanged = this.handleSearchChanged.bind(this);
-    this.state = {
-      users: null,
-      searchQuery: null
+    this.handleKeyPressed = this.handleKeyPressed.bind(this);
+  }
+
+  handleKeyPressed(event) {
+    if (event.charCode == 13) {
+      this.executeSearch();
     }
   }
 
   handleSearchClicked(event) {
-    fetch(`https://api.github.com/search/users?q=${this.state.searchQuery}`)
+    if (this.state.searchQuery == this.state.executedQuery) {
+      return;
+    }
+    this.executeSearch();
   }
 
   handleSearchChanged(event) {
     console.debug(`Updating the query to ${event.target.value}`);
     this.setState({
-      searchQuery: event.target.value
+      searchQuery: event.target.value,
+      searchError: !event.target.value
     });
   }
 
+  executeSearch() {
+    let executedQuery = this.state.searchQuery;
+    if (this.state.searchError) {
+      return;
+    }
+
+    fetch(`https://api.github.com/search/users?q=${executedQuery}`)
+      .then(response => {
+        let linkHeader = response.headers.get('Link');
+        if (linkHeader) {
+          let linkHeaderObj = parseLinkHeader(linkHeader);
+          this.setState({
+            numberOfPages: linkHeaderObj.last.page,
+            currentPage: 1
+          })
+        }
+        return response.json();
+      }).then(json => {
+        this.setState({
+          users: json.items,
+          pageSize: json.items.length,
+          loading: false,
+          executedQuery
+        });
+      });
+  }
+
   render() {
+    let { users, loading, executedQuery, searchError } = this.state;
     return (
       <div className="App">
         <AppBar className="App-intro flex" position="static" title="Github Viewer" color="default">
@@ -49,15 +86,16 @@ class App extends Component {
                 </Typography>
               </Grid>
               <Grid item xs={8}>
-                <Input type="text" placeholder="Search for users" style={{width: 250}} onChange={this.handleSearchChanged}/>
-                <Button color="primary" onClick={this.handleSearchClicked}>Search</Button>
+                <Input error={searchError} type="text" placeholder="Search for users" autoFocus={true} onKeyPress={this.handleKeyPressed} style={{width: 250}} onChange={this.handleSearchChanged} onSubmit={this.handleSearchClicked}/>
+                <Button color="primary" onClick={this.handleSearchClicked} disabled={loading}>Search</Button>
               </Grid>
             </Grid>
           </Toolbar>
         </AppBar>
-        <Grid container style={rootContainerStyles} className="user-list" alignItems="center">
-          {this.state.queryToExecute && <UserList query={this.state.queryToExecute}/>}
-        </Grid>
+        <LoadingContainer loading={loading}>
+          <SearchMetadataBar numberOfMatches={users.length} executedQuery={executedQuery} />
+          <UserList users={users}/>
+        </LoadingContainer>
       </div>
     );
   }
