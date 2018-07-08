@@ -20,14 +20,11 @@ const User = ({ user }) =>
         <CardMedia image={user.avatar_url} title={user.login} style={{height: 100, width: 100}}>
         </CardMedia>
         <CardContent>
-          <Typography gutterBottom variant="headline" component="h2" style={{
-            whiteSpace: 'nowrap', 
-            overflowX: 'hidden', 
-            maxWidth: '80%', 
-            textOverflow: 'ellipsis'}}>
+          <Typography gutterBottom noWrap variant="headline" component="h2" style={{
+            maxWidth: '80%'}}>
             {user.login}
           </Typography>
-          <Button color="primary" variant="contained" component={Link} to={`/users/${user.id}/repos`}>View Repos</Button>
+          <Button color="primary" variant="contained" component={Link} to={`/users/${user.login}/repos`}>View Repos</Button>
         </CardContent>
       </Card>
     </Grid>

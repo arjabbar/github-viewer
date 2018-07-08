@@ -47,12 +47,15 @@ html, body, #root, .App {
   margin: auto; 
   min-height: 100%;
   overflow-y: scroll;
-  justify-content: center;
+  justify-content: flex-start;
   flex-direction: column;
 }
 
 .loading-container > .user-search-results {
-  width: 100%;
   flex-grow: 1;
   overflow-y: unset;
+}
+
+.loading-container > * {
+  width: 100%;
 }
