@@ -6,7 +6,7 @@ import './App.css';
 import UserList from './UserList';
 import SearchMetadataBar from './SearchMetadataBar';
 import LoadingContainer from './LoadingContainer';
-import { PropTypes } from 'prop-types';
+import { BrowserRouter as Router, Route, Link } from "react-router-dom";
 
 class App extends Component {
 
@@ -76,27 +76,33 @@ class App extends Component {
   render() {
     let { users, loading, executedQuery, searchError } = this.state;
     return (
-      <div className="App">
-        <AppBar className="App-intro flex" position="static" title="Github Viewer" color="default">
-          <Toolbar>
-            <Grid container>
-              <Grid item xs={2}>
-                <Typography variant="title" color="inherit">
-                  Github Viewer
-                </Typography>
+      <Router>
+        <div className="App">
+          <AppBar className="App-intro flex" position="static" title="Github Viewer" color="default">
+            <Toolbar>
+              <Grid container>
+                <Grid item xs={2}>
+                  <Typography variant="title" color="inherit">
+                    Github Viewer
+                  </Typography>
+                </Grid>
+                <Grid item xs={8}>
+                  <Input error={searchError} type="text" placeholder="Search for users" autoFocus={true} onKeyPress={this.handleKeyPressed} style={{width: 250}} onChange={this.handleSearchChanged} onSubmit={this.handleSearchClicked}/>
+                  <Button color="primary" onClick={this.handleSearchClicked} disabled={loading}>Search</Button>
+                </Grid>
               </Grid>
-              <Grid item xs={8}>
-                <Input error={searchError} type="text" placeholder="Search for users" autoFocus={true} onKeyPress={this.handleKeyPressed} style={{width: 250}} onChange={this.handleSearchChanged} onSubmit={this.handleSearchClicked}/>
-                <Button color="primary" onClick={this.handleSearchClicked} disabled={loading}>Search</Button>
-              </Grid>
-            </Grid>
-          </Toolbar>
-        </AppBar>
-        <LoadingContainer loading={loading}>
-          <SearchMetadataBar numberOfMatches={users.length} executedQuery={executedQuery} />
-          <UserList users={users}/>
-        </LoadingContainer>
-      </div>
+            </Toolbar>
+          </AppBar>
+          <LoadingContainer loading={loading}>
+            <Route exact path="/">
+              <div>
+                <SearchMetadataBar numberOfMatches={users.length} executedQuery={executedQuery} />
+                <UserList users={users}/>
+              </div>
+            </Route>
+          </LoadingContainer>
+        </div>
+      </Router>
     );
   }
 }
