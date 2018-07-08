@@ -1,4 +1,4 @@
-import { AppBar, Toolbar, Button, StepButton, IconButton, Typography } from '@material-ui/core';
+import { AppBar, Toolbar, Typography } from '@material-ui/core';
 import React from 'react';
 import { PropTypes } from "prop-types";
 

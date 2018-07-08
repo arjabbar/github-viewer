@@ -50,3 +50,9 @@ html, body, #root, .App {
   justify-content: center;
   flex-direction: column;
 }
+
+.loading-container > .user-search-results {
+  width: 100%;
+  flex-grow: 1;
+  overflow-y: unset;
+}

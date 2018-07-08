@@ -1,17 +1,14 @@
 import { AppBar, Button, Grid, Input, Toolbar, Typography } from "@material-ui/core";
-import * as parseLinkHeader from 'parse-link-header';
 import React, { Component } from 'react';
 import "whatwg-fetch";
 import './App.css';
-import UserList from './UserList';
-import SearchMetadataBar from './SearchMetadataBar';
-import LoadingContainer from './LoadingContainer';
-import { BrowserRouter as Router, Route, Link } from "react-router-dom";
+import { BrowserRouter as Router, Route, Link, Switch } from "react-router-dom";
+import UserRepos from './UserRepos';
+import UserSearch from './UserSearch';
 
 class App extends Component {
 
   state = {
-    users: [],
     searchQuery: null,
     loading: false,
     executedQuery: null,
@@ -22,20 +19,15 @@ class App extends Component {
     super(props);
     this.handleSearchClicked = this.handleSearchClicked.bind(this);
     this.handleSearchChanged = this.handleSearchChanged.bind(this);
-    this.handleKeyPressed = this.handleKeyPressed.bind(this);
-  }
-
-  handleKeyPressed(event) {
-    if (event.charCode == 13) {
-      this.executeSearch();
-    }
   }
 
   handleSearchClicked(event) {
-    if (this.state.searchQuery == this.state.executedQuery) {
+    if (this.state.searchQuery === this.state.executedQuery) {
       return;
     }
-    this.executeSearch();
+    this.setState({
+      executedQuery: this.state.searchQuery
+    })
   }
 
   handleSearchChanged(event) {
@@ -46,35 +38,8 @@ class App extends Component {
     });
   }
 
-  executeSearch() {
-    let executedQuery = this.state.searchQuery;
-    if (this.state.searchError) {
-      return;
-    }
-
-    fetch(`https://api.github.com/search/users?q=${executedQuery}`)
-      .then(response => {
-        let linkHeader = response.headers.get('Link');
-        if (linkHeader) {
-          let linkHeaderObj = parseLinkHeader(linkHeader);
-          this.setState({
-            numberOfPages: linkHeaderObj.last.page,
-            currentPage: 1
-          })
-        }
-        return response.json();
-      }).then(json => {
-        this.setState({
-          users: json.items,
-          pageSize: json.items.length,
-          loading: false,
-          executedQuery
-        });
-      });
-  }
-
   render() {
-    let { users, loading, executedQuery, searchError } = this.state;
+    let { loading, executedQuery, searchError, searchQuery } = this.state;
     return (
       <Router>
         <div className="App">
@@ -87,20 +52,27 @@ class App extends Component {
                   </Typography>
                 </Grid>
                 <Grid item xs={8}>
-                  <Input error={searchError} type="text" placeholder="Search for users" autoFocus={true} onKeyPress={this.handleKeyPressed} style={{width: 250}} onChange={this.handleSearchChanged} onSubmit={this.handleSearchClicked}/>
-                  <Button color="primary" onClick={this.handleSearchClicked} disabled={loading}>Search</Button>
+                  <Route render={({history}) => (<Input error={searchError} 
+                    type="text" 
+                    placeholder="Search for users" 
+                    autoFocus={true} 
+                    onKeyPress={(event) => {
+                      if (event.charCode === 13) {
+                        history.push(`/search?query=${searchQuery}`);
+                      }
+                    }} 
+                    style={{width: 250}} 
+                    onChange={this.handleSearchChanged} 
+                    onSubmit={this.handleSearchClicked}/>)} />
+                  <Button component={Link} to={`/search?query=${searchQuery}`} color="primary" onClick={this.handleSearchClicked} disabled={loading}>Search</Button>
                 </Grid>
               </Grid>
             </Toolbar>
           </AppBar>
-          <LoadingContainer loading={loading}>
-            <Route exact path="/">
-              <div>
-                <SearchMetadataBar numberOfMatches={users.length} executedQuery={executedQuery} />
-                <UserList users={users}/>
-              </div>
-            </Route>
-          </LoadingContainer>
+          <Switch>
+            <Route exact={true} path="/search" component={UserSearch} executedQuery={executedQuery} />
+          </Switch>
+          <Route exact path="/users/:userId/repos" component={UserRepos} />
         </div>
       </Router>
     );

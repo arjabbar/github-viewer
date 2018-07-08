@@ -1,5 +1,6 @@
 import { Button, Card, CardContent, CardMedia, Grid, Typography } from '@material-ui/core';
 import React from 'react';
+import { Link } from "react-router-dom";
 
 const UserList = ({ users }) =>  
   (
@@ -19,10 +20,14 @@ const User = ({ user }) =>
         <CardMedia image={user.avatar_url} title={user.login} style={{height: 100, width: 100}}>
         </CardMedia>
         <CardContent>
-          <Typography gutterBottom variant="headline" component="h2">
+          <Typography gutterBottom variant="headline" component="h2" style={{
+            whiteSpace: 'nowrap', 
+            overflowX: 'hidden', 
+            maxWidth: '80%', 
+            textOverflow: 'ellipsis'}}>
             {user.login}
           </Typography>
-          <Button color="primary" variant="contained">View Repos</Button>
+          <Button color="primary" variant="contained" component={Link} to={`/users/${user.id}/repos`}>View Repos</Button>
         </CardContent>
       </Card>
     </Grid>
