@@ -5,6 +5,10 @@ install:
 build_script:
   - cmd: yarn build
 
+artifacts:
+  - path: build
+    type: zip
+
 deploy:
   provider: S3
   access_key_id: $(AWS_ACCESS_KEY_ID)
@@ -12,7 +16,8 @@ deploy:
   bucket: github-viewer.jabbar-web.com
   region: $(AWS_DEFAULT_REGION)
   set_public: true
-  artifact: build\**
+  artifact: build.zip
+  unzip: true
 
 cache:
   - node_modules
