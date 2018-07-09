@@ -1,0 +1,15 @@
+install:
+  - ps: Install-Product node 10.6.0
+  - yarn install --frozen-lockfile
+
+build_script:
+  - cmd: yarn build
+
+deploy:
+  provider: S3
+  access_key_id: $(AWS_ACCESS_KEY_ID)
+  secret_access_key: $(AWS_SECREY_ACCESS_KEY)
+  bucket: github-viewer.jabbar-web.com
+  region: $(AWS_DEFAULT_REGION)
+  set_public: true
+  folder: build
