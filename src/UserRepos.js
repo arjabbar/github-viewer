@@ -26,6 +26,11 @@ class UserRepos extends Component {
 
   constructor(props) {
     super(props);
+    this.handleCancelClicked = this.handleCancelClicked.bind(this)
+  }
+
+  handleCancelClicked(event) {
+    this.props.history.goBack();
   }
 
   componentDidMount() {
@@ -44,7 +49,7 @@ class UserRepos extends Component {
           <Typography className={this.props.classes.toolbar} variant="subheading">
             Showing repos for {this.props.match.params.userId}
           </Typography>
-          <IconButton component={Link} to="/">
+          <IconButton onClick={this.handleCancelClicked}>
             <Cancel />
           </IconButton>
         </Toolbar>
@@ -96,7 +101,7 @@ class UserRepos extends Component {
           </Paper>
         </div>
       </LoadingContainer>
-    );
+    );  
   }
 }
 

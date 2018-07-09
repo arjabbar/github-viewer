@@ -3,6 +3,8 @@ import SearchMetadataBar from './SearchMetadataBar';
 import LoadingContainer from './LoadingContainer';
 import UserList from './UserList';
 import 'whatwg-fetch';
+import { Typography, Button } from '@material-ui/core';
+import { Link } from 'react-router-dom';
 let queryString = require("query-string");
 
 export default class UserSearch extends Component {
@@ -44,8 +46,18 @@ export default class UserSearch extends Component {
   
   render() {
     let { users, executedQuery, loading } = this.state;
+    if (!users) {
+      return (
+        <div>
+          <Typography variant="headline">
+            No Users found!
+          </Typography>
+          <Button component={Link} to="/">Go Back</Button>
+        </div>
+      );
+    }
     return (
-      <LoadingContainer loading={loading}>
+      <LoadingContainer loading={loading} >
         <div className="user-search-results">
           <SearchMetadataBar numberOfMatches={users.length} executedQuery={executedQuery} />
           <UserList users={users}/>

@@ -5,6 +5,7 @@ import './App.css';
 import { BrowserRouter as Router, Route, Link, Switch } from "react-router-dom";
 import UserRepos from './UserRepos';
 import UserSearch from './UserSearch';
+let queryString = require("query-string");
 
 class App extends Component {
 
@@ -22,7 +23,8 @@ class App extends Component {
   }
 
   handleSearchClicked(event) {
-    if (this.state.searchQuery === this.state.executedQuery) {
+    event.preventDefault();
+    if (this.state.searchQuery === this.state.executedQuery || this.state.searchError || !this.state.searchQuery) {
       return;
     }
     this.setState({
@@ -35,6 +37,13 @@ class App extends Component {
     this.setState({
       searchQuery: event.target.value,
       searchError: !event.target.value
+    });
+  }
+
+  componentDidMount() {
+    // TODO: Grabbing the window is cheating. Find a way to do this within react router.
+    this.setState({
+      searchQuery: queryString.parse(window.location.search).query
     });
   }
 
@@ -57,10 +66,10 @@ class App extends Component {
                     placeholder="Search for users" 
                     autoFocus={true} 
                     onKeyPress={(event) => {
-                      if (event.charCode === 13) {
+                      if (event.charCode === 13 && !this.state.searchError) {
                         history.push(`/search?query=${searchQuery}`);
                       }
-                    }} 
+                    }}
                     style={{width: 250}} 
                     onChange={this.handleSearchChanged} 
                     onSubmit={this.handleSearchClicked}/>)} />
