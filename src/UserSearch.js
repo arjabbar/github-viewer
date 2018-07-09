@@ -5,12 +5,12 @@ import UserList from './UserList';
 import 'whatwg-fetch';
 import { Typography, Button } from '@material-ui/core';
 import { Link } from 'react-router-dom';
-let queryString = require("query-string");
+import qs from "qs";
 
 export default class UserSearch extends Component {
   constructor(props) {
     super(props);
-    let query = queryString.parse(props.location.search).query;
+    let query = qs.parse(props.location.search).query;
     this.state = {
       executedQuery: query,
       loading: true,
@@ -23,7 +23,7 @@ export default class UserSearch extends Component {
   }
 
   componentWillReceiveProps(props) {
-    let query = queryString.parse(props.location.search).query;
+    let query = qs.parse(props.location.search).query;
     if (query !== this.state.executedQuery) {
       this.setState({
         executedQuery: query

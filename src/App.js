@@ -5,7 +5,7 @@ import './App.css';
 import { BrowserRouter as Router, Route, Link, Switch } from "react-router-dom";
 import UserRepos from './UserRepos';
 import UserSearch from './UserSearch';
-let queryString = require("query-string");
+import qs from "qs";
 
 class App extends Component {
 
@@ -43,7 +43,7 @@ class App extends Component {
   componentDidMount() {
     // TODO: Grabbing the window is cheating. Find a way to do this within react router.
     this.setState({
-      searchQuery: queryString.parse(window.location.search).query
+      searchQuery: qs.parse(window.location.search).query
     });
   }
 
