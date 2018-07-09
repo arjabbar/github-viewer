@@ -8,6 +8,7 @@ build_script:
 artifacts:
   - path: build
     type: zip
+    name: site
 
 deploy:
   provider: S3
@@ -16,7 +17,7 @@ deploy:
   bucket: github-viewer.jabbar-web.com
   region: $(AWS_DEFAULT_REGION)
   set_public: true
-  artifact: build.zip
+  artifact: site
   unzip: true
 
 cache:
