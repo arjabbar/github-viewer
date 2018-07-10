@@ -7,7 +7,7 @@ build_script:
   - cd build
   - aws s3 sync . s3://github-viewer.jabbar-web.com --delete
 
-test:
+test_script:
   - yarn test --ci a
 
 cache:
