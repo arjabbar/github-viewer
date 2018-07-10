@@ -3,22 +3,9 @@ install:
   - yarn install --frozen-lockfile
 
 build_script:
-  - cmd: yarn build
-
-artifacts:
-  - path: build
-    type: zip
-    name: site
-
-deploy:
-  provider: S3
-  access_key_id: $(AWS_ACCESS_KEY_ID)
-  secret_access_key: $(AWS_SECREY_ACCESS_KEY)
-  bucket: github-viewer.jabbar-web.com
-  region: $(AWS_DEFAULT_REGION)
-  set_public: true
-  artifact: site
-  unzip: true
+  - yarn build
+  - cd build
+  - aws s3 sync . s3://github-viewer.jabbar-web.com --delete
 
 cache:
   - node_modules
