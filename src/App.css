@@ -51,6 +51,10 @@ html, body, #root, .App {
   flex-direction: column;
 }
 
+.loading-container.loading {
+  justify-content: center;
+}
+
 .loading-container > .user-search-results {
   flex-grow: 1;
   overflow-y: unset;

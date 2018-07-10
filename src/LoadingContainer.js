@@ -5,7 +5,7 @@ import { PropTypes } from "prop-types";
 const LoadingContainer = props => {
   return (
     <Grid container
-    className="loading-container"
+    className={props.loading ? 'loading-container loading' : 'loading-container'}
     alignItems="center">
         {props.loading ? <CircularProgress style={{alignSelf: 'center'}} /> : props.children}
     </Grid>

@@ -10,7 +10,7 @@ import qs from "qs";
 export default class UserSearch extends Component {
   constructor(props) {
     super(props);
-    let query = qs.parse(props.location.search).query;
+    let query = qs.parse(props.location.search.replace('?', '')).query;
     this.state = {
       executedQuery: query,
       loading: true,
@@ -23,7 +23,7 @@ export default class UserSearch extends Component {
   }
 
   componentWillReceiveProps(props) {
-    let query = qs.parse(props.location.search).query;
+    let query = qs.parse(props.location.search.replace('?', '')).query;
     if (query !== this.state.executedQuery) {
       this.setState({
         executedQuery: query
